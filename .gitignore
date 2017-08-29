@@ -33,3 +33,29 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+
+# Misc
+.last_cover_stats
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+# Org-mode
+.org-id-locations
+*_archive
+a.out
+*.o
+*.obj
+*.class
+MultiTestDB.conf
+*.frozen.conf
+bioperl*.zip
+/modules/t/CLEAN.t
