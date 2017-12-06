@@ -36,7 +36,40 @@ use Config::Any::Merge;
 use File::Basename;
 use File::Spec;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'Catalyst::Controller::REST' }
+
+__PACKAGE__->config(
+  namespace => '',
+  compliance_mode => 1,
+);
+
+#EnsEMBL::REST::Base::Controller->turn_on_serializers(__PACKAGE__);
+
+sub turn_on_serializers {
+    my ($class, $package) = @_;
+
+  ## Only add a default for text/html if it is not already set by the controller
+  if(!$package->config->{map}->{'text/html'}) {
+#    $package->config(default => 'text/html');
+      $package->config->{map}->{'text/html'} = 'YAML::HTML';
+  }
+  if(!$package->config->{default}) {
+      print STDERR "Changing default\n";
+      $package->config(default => 'text/html');
+  }
+
+      print STDERR "ARE WE $package\n\n";
+  if(!($package->config->{deserialize_map} &&
+       $package->config->{deserialize_map}->{'application/json'})) {
+      print STDERR "SETTING\n\n";
+    $package->config->{deserialize_map}->{'application/json'} = 'JSON';
+  }
+  if(!$package->config->{deserializer_default}) {
+      $package->config(deserializer_default => 'application/json');
+  }
+
+    print STDERR Dumper($package->config);
+}
 
 sub initialize_controller {
     warn("No initialize_controller implemented for controller " . __PACKAGE__);
@@ -86,7 +119,8 @@ sub _load_config {
 
     # Hunt through the stems in order looking for config files
     $self->{config} = Config::Any::Merge->load_stems({stems => \@stems, override => 0 });
-    print Dumper $self->{config};
+    use Data::Dumper;
+    print STDERR Dumper($self->{config});
     
 }
 
@@ -103,5 +137,7 @@ sub _package_base_dir {
 
     return $package_base, lc($package);
 }
+
+sub end : ActionClass('Serialize') {}
 
 1;

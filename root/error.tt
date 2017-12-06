@@ -1,6 +1,6 @@
 [%#
 Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute 
-Copyright [2016-2017] EMBL-European Bioinformatics Institute
+Copyright [2016] EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,11 +15,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %]
 
-<!DOCTYPE html>
+<h1 id="title">Your query could not be processed</h1>
+
+<div class="row">
+<div class="span10">
+<div class="lead">
+</div>
+
+<h2>Please check your parameters</h3>
 
 
-    [% content %]
+</div>
 
 
-</body>
-</html>
+
+</div>

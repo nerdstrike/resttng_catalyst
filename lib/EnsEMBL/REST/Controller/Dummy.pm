@@ -17,12 +17,13 @@ limitations under the License.
 
 =cut
 
-package EnsEMBL::REST::Controller::Root;
+package EnsEMBL::REST::Controller::Dummy;
 
 use Moose;
 use namespace::autoclean;
 use Data::Dumper;
 
+#BEGIN { extends 'Catalyst::Controller::REST' }
 BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 
 #
@@ -30,53 +31,48 @@ BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 # so they function identically to actions created in MyApp.pm
 #
 __PACKAGE__->config(
-  namespace => '',
+#  namespace => '',
   compliance_mode => 1,
+
+  'default' => 'application/json',
+  'map' => {
+    'application/json' => 'JSON',
+    'text/html'        => 'JSON',
+    'shitty/type'      => 'JSON',
+  },
 );
 
-#sub index : Path : Args(0) {
-#  my ( $self, $c ) = @_;
-#  print "HERE, default index path\n";
-#  $c->go('EnsEMBL::REST::Controller::Documentation','index');
-#}
+sub index2 : Path('dummy') ActionClass('REST') {
+  my ( $self, $c ) = @_;
+  print "HERE, dummy controller dispatch\n";
 
-#sub dummy :Path('dummy') ActionClass('REST') {
-#  my ( $self, $c ) = @_;
-#  print "HERE, dummy path\n";
-#  return;
-#}
+  return;
+}
 
-#sub dummy_GET {
-#  my ($self, $c) = @_;
+sub index2_GET {
+  my ($self, $c) = @_;
 
-#  print "dummy GET\n";
+  print "dummy controller GET\n";
 #  $c->go('EnsEMBL::REST::Controller::Documentation','index');
 
-#}
+  print STDERR Dumper($c->request->accepted_content_types);
 
-#sub dummy_POST {
-#  my ($self, $c) = @_;
+  $self->status_ok(
+      $c,
+      entity => { foo => 'bar' });
 
-#  print "dummy POST\n";
-#  my $post_data = $c->req->data;
-#  print STDERR Dumper($post_data);
-#  $c->go('EnsEMBL::REST::Controller::Documentation','index');
+}
 
-#}
+sub index2_POST {
+  my ($self, $c) = @_;
 
-=head2 default
+  print "dummy controller POST\n";
+  my $post_data = $c->req->data;
+  print STDERR Dumper($post_data);
+  $c->go('EnsEMBL::REST::Controller::Documentation','index');
 
-Standard 404 error page
+}
 
-=cut
-
-#sub default : Path {
-#  my ( $self, $c ) = @_;
-
-#  print "In default path\n";
-#  my $url = $c->uri_for('/');
-#  $c->go( 'ReturnError', 'not_found', [qq{page not found. Please check your uri and refer to our documentation $url}] );
-#}
 
 sub initialize_controller {
     return;
@@ -96,7 +92,7 @@ Attempt to render a view, if needed.
 
 =cut
 
-#sub end : ActionClass('RenderView') {}
+#sub end : ActionClass('Serialize') {}
 
 __PACKAGE__->meta->make_immutable;
 
