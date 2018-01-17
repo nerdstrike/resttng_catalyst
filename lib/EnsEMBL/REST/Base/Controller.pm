@@ -39,7 +39,7 @@ use File::Spec;
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config(
-  namespace => '',
+#  namespace => '',
   compliance_mode => 1,
 );
 
@@ -68,7 +68,7 @@ sub turn_on_serializers {
       $package->config(deserializer_default => 'application/json');
   }
 
-    print STDERR Dumper($package->config);
+#    print STDERR Dumper($package->config);
 }
 
 sub initialize_controller {
@@ -119,8 +119,6 @@ sub _load_config {
 
     # Hunt through the stems in order looking for config files
     $self->{config} = Config::Any::Merge->load_stems({stems => \@stems, override => 0 });
-    use Data::Dumper;
-    print STDERR Dumper($self->{config});
     
 }
 
@@ -139,5 +137,7 @@ sub _package_base_dir {
 }
 
 sub end : ActionClass('Serialize') {}
+
+__PACKAGE__->meta->make_immutable;
 
 1;

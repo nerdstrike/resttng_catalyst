@@ -1,0 +1,3 @@
+<h1>[% endpoint.method %] [% endpoint.uri %]</h1>
+
+[% endpoint.description %]

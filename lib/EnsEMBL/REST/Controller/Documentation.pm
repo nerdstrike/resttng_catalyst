@@ -26,10 +26,27 @@ use Bio::EnsEMBL::ApiVersion qw/software_version/;
 
 BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 
+# Configure the default content type as HTML but allow
+# JSON so programmatic clients can come in and get
+# an endpoint listing straight from our homepage
+
+__PACKAGE__->config(
+  compliance_mode => 1,
+
+  'default' => 'text/html',
+  'map' => {
+    'text/html'        => 'View',
+    'application/json' => 'JSON',
+  },
+);
+
 sub begin : Private {
   my ($self, $c) = @_;
+
+  print STDERR "Making it to Documentation::begin()\n";
 #  my $endpoints = $c->model('Documentation')->merged_config($c);
-#  $c->stash()->{endpoints} = $endpoints;
+  $c->stash()->{endpoints} = EnsEMBL::REST->config()->{"Endpoints"};
+  $c->stash()->{groups} = EnsEMBL::REST->config()->{"Documentation"};
 #  my $cfg = EnsEMBL::REST->config();
 #  $c->stash(
 #    site_name => $cfg->{site_name},
@@ -46,18 +63,39 @@ sub begin : Private {
   return;
 }
 
-sub index :Path :Args(0) {
+sub index :Path :Args(0) :ActionClass('REST::ForBrowsers') {
   my ($self, $c) = @_;
   print STDERR "here\n\n\n";
 }
 
+sub index_GET : Private {
+  my ($self, $c) = @_;
+
+  print STDERR "Documentation::index_GET\n";
+
+  $self->status_ok(
+      $c,
+      entity => { foo => 'baz' });
+}
+
+sub index_GET_html : Private {
+  my ($self, $c) = @_;
+
+  print STDERR "Documentation::index_GET_html\n";
+
+
+}
+
 sub info :Path('info') :Args(1) {
   my ($self, $c, $endpoint) = @_;
-  my $endpoint_cfg = $c->stash()->{endpoints}->{$endpoint};
+  print STDERR "$endpoint\n";
+  my $endpoint_cfg = $c->config()->{Endpoints}->{$endpoint};
   if($endpoint_cfg) {
-    $endpoint_cfg = $c->model('Documentation')->enrich($endpoint_cfg);
-    $c->stash()->{endpoint} = $endpoint_cfg;
-    $c->stash()->{template_title} = join(',',@{ $endpoint_cfg->{method} } ) . ' ' . $endpoint_cfg->{endpoint};
+      my $section =  $c->config()->{Endpoints}->{$endpoint}->{section};
+      $c->stash()->{endpoint} = $c->config()->{Documentation}->{$section}->{$endpoint};
+#    $endpoint_cfg = $c->model('Documentation')->enrich($endpoint_cfg);
+#    $c->stash()->{endpoint} = $endpoint_cfg;
+#    $c->stash()->{template_title} = join(',',@{ $endpoint_cfg->{method} } ) . ' ' . $endpoint_cfg->{endpoint};
   }
   else {
     $c->response->status(404);

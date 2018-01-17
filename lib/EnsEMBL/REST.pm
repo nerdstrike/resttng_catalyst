@@ -118,19 +118,37 @@ after setup_finalize => sub {
   __PACKAGE__->log->info("Fetching documentation from controllers");
   foreach my $controller ($app->controllers) {
     __PACKAGE__->log->debug("Fetching documentation from controller $controller");
-    $app->controller($controller)->endpoint_documentation();
+    my $endpoint_documentation = $app->controller($controller)->endpoint_documentation();
 
     # DO SOMETHING with the documentation fragment here
+    if($endpoint_documentation && (ref($endpoint_documentation) eq 'HASH')) {
+      foreach my $section (keys %$endpoint_documentation) {
+        if(exists EnsEMBL::REST->config()->{"Documentation"}->{$section}) {
+          @{EnsEMBL::REST->config()->{"Documentation"}->{$section}}{keys $endpoint_documentation->{$section}} =
+             values $endpoint_documentation->{$section};
+        } else {
+          EnsEMBL::REST->config()->{"Documentation"}->{$section} = $endpoint_documentation->{$section};
+        }
+      }
+    }
   }
 
   __PACKAGE__->log->info("Fetching endpoints from controllers");
   foreach my $controller ($app->controllers) {
     __PACKAGE__->log->debug("Fetching endpoints from controller $controller");
-    $app->controller($controller)->endpoints();
+    my $endpoints = $app->controller($controller)->endpoints();
 
     # DO SOMETHING with the endpoints fragment here
-  }
+    if($endpoints && (ref($endpoints) eq 'HASH')) {
+      foreach my $endpoint (keys %$endpoints) {
+        if(exists EnsEMBL::REST->config()->{"Endpoints"}->{$endpoint}) {
+          print STDERR "WARNING: Endpoint $endpoint is being redefined in Controller $controller\n";
+        }
+        EnsEMBL::REST->config()->{"Endpoints"}->{$endpoint} = $endpoints->{$endpoint};
 
+      }
+    }
+  }
 
 };
 

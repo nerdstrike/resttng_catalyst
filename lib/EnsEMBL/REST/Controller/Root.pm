@@ -23,6 +23,7 @@ use Moose;
 use namespace::autoclean;
 use Data::Dumper;
 
+#BEGIN { extends 'Catalyst::Controller' }
 BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 
 #
@@ -32,37 +33,19 @@ BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 __PACKAGE__->config(
   namespace => '',
   compliance_mode => 1,
+
+  'default' => 'text/html',
+  'map' => {
+    'text/html'        => 'View',
+    'application/json' => 'JSON',
+  },
 );
 
-#sub index : Path : Args(0) {
-#  my ( $self, $c ) = @_;
-#  print "HERE, default index path\n";
-#  $c->go('EnsEMBL::REST::Controller::Documentation','index');
-#}
-
-#sub dummy :Path('dummy') ActionClass('REST') {
-#  my ( $self, $c ) = @_;
-#  print "HERE, dummy path\n";
-#  return;
-#}
-
-#sub dummy_GET {
-#  my ($self, $c) = @_;
-
-#  print "dummy GET\n";
-#  $c->go('EnsEMBL::REST::Controller::Documentation','index');
-
-#}
-
-#sub dummy_POST {
-#  my ($self, $c) = @_;
-
-#  print "dummy POST\n";
-#  my $post_data = $c->req->data;
-#  print STDERR Dumper($post_data);
-#  $c->go('EnsEMBL::REST::Controller::Documentation','index');
-
-#}
+sub index : Path : Args(0) {
+  my ( $self, $c ) = @_;
+  print "HERE, default index path\n";
+  $c->go('EnsEMBL::REST::Controller::Documentation','index');
+}
 
 =head2 default
 

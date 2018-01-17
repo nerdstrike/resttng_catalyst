@@ -1,1 +1,16 @@
-Hello world
+<h1 id="title">Endpoints</h1>
+
+<table class="table table-striped">
+[% FOREACH pair IN groups.pairs %]
+<thead>
+
+<tr><td><h3 id="[% pair.key.replace('\W+','_') %]">	[% pair.key %]</h3></td><td></td></tr>
+<tr><th>Resource</th><th>Description</th></tr>
+</thead>
+    <tbody>
+	[% FOREACH endpoint IN pair.value.pairs %]
+      <tr><td><a href="[% c.uri_for_action('/documentation/info', endpoint.key) %]">[% endpoint.value.method %] [% endpoint.value.uri %] </a> </td><td> [% endpoint.value.description %]</td></tr>
+	[% END %]
+    </tbody>
+[% END %]
+  </table>
