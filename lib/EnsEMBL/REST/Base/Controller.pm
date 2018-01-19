@@ -27,6 +27,14 @@ EnsEMBL::REST::Base::Controller - Base controller that all EnsEMBL::REST control
 
 The EnsEMBL Group - http://www.ensembl.org/Help/Contact
 
+=head1 SYNOPSIS
+
+The root controller for all controllers in the Ensembl REST server
+
+=head1 DESCRIPTION
+
+
+
 =cut
 
 package EnsEMBL::REST::Base::Controller;
@@ -39,37 +47,10 @@ use File::Spec;
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config(
-#  namespace => '',
   compliance_mode => 1,
 );
 
-#EnsEMBL::REST::Base::Controller->turn_on_serializers(__PACKAGE__);
-
-sub turn_on_serializers {
-    my ($class, $package) = @_;
-
-  ## Only add a default for text/html if it is not already set by the controller
-  if(!$package->config->{map}->{'text/html'}) {
-#    $package->config(default => 'text/html');
-      $package->config->{map}->{'text/html'} = 'YAML::HTML';
-  }
-  if(!$package->config->{default}) {
-      print STDERR "Changing default\n";
-      $package->config(default => 'text/html');
-  }
-
-      print STDERR "ARE WE $package\n\n";
-  if(!($package->config->{deserialize_map} &&
-       $package->config->{deserialize_map}->{'application/json'})) {
-      print STDERR "SETTING\n\n";
-    $package->config->{deserialize_map}->{'application/json'} = 'JSON';
-  }
-  if(!$package->config->{deserializer_default}) {
-      $package->config(deserializer_default => 'application/json');
-  }
-
-#    print STDERR Dumper($package->config);
-}
+# Default null initialization function if a controller doesn't implement one
 
 sub initialize_controller {
     warn("No initialize_controller implemented for controller " . __PACKAGE__);
@@ -77,11 +58,15 @@ sub initialize_controller {
     return;
 }
 
+# Default null endpoint documentation function if a controller doesn't implement one
+
 sub endpoint_documentation {
     warn("No documentation implemented for controller " . __PACKAGE__);
 
     return;
 }
+
+# Default null endpoints list function if a controller doesn't implement one
 
 sub endpoints {
     warn("No endpoints() response implemented for controller " . __PACKAGE__);

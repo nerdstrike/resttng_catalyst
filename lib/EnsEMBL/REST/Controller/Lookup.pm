@@ -29,8 +29,9 @@ with 'EnsEMBL::REST::Role::PostLimiter';
 my $FORMAT_TYPES = { full => 1, condensed => 1 };
 
 #
-# Sets the actions in this controller to be registered with no prefix
-# so they function identically to actions created in MyApp.pm
+# Use the new Catalyst::Controller::REST RFC 7231 compliance mode,
+# and set a default response content type of application/json if no
+# specific Accept header is given. Also allow YAML.
 #
 __PACKAGE__->config(
   compliance_mode => 1,

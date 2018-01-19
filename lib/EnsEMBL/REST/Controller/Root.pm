@@ -23,12 +23,12 @@ use Moose;
 use namespace::autoclean;
 use Data::Dumper;
 
-#BEGIN { extends 'Catalyst::Controller' }
 BEGIN { extends 'EnsEMBL::REST::Base::Controller' }
 
 #
-# Sets the actions in this controller to be registered with no prefix
-# so they function identically to actions created in MyApp.pm
+# Sets the default content type for the root controller ("/")
+# to text/html via the tt template engine. But allows JSON
+# if requested via the Accept header.
 #
 __PACKAGE__->config(
   namespace => '',

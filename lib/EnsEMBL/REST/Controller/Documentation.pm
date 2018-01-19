@@ -15,6 +15,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+=head1 NAME
+
+EnsEMBL::REST::Controller::Documentation
+
+=head1 DESCRIPTION
+
+Prototype of documentation system, browsers will be shown a version
+of the documentation based on the templates under root/documentation/
+
+However if a client sends a header such as Accept: Application/JSON, a
+programmatically created version will be returned. This is done via the
+REST::ForBrowsers ActionClass.
+
 =cut
 
 package EnsEMBL::REST::Controller::Documentation;
@@ -63,39 +76,78 @@ sub begin : Private {
   return;
 }
 
+# Endpoint controller for documentation, uses REST::ForBrowsers
+# to dispatch based on the Accept header.
+
 sub index :Path :Args(0) :ActionClass('REST::ForBrowsers') {
   my ($self, $c) = @_;
-  print STDERR "here\n\n\n";
+
 }
+
+# If we receive a GET method request and ActionClass didn't
+# think it was a browser, make a data structure based
+# on the documentation configuration and pass it back to
+# whichever serializer is configured and appropriate based
+# on the Accept header.
 
 sub index_GET : Private {
   my ($self, $c) = @_;
 
-  print STDERR "Documentation::index_GET\n";
+  my $endpoints = $c->config()->{Documentation};
+  # Enrich/tune the documentation to...OpenAPI standards?
 
-  $self->status_ok(
-      $c,
-      entity => { foo => 'baz' });
+  if($endpoints) {
+
+      $self->status_ok(
+	  $c,
+	  entity => $endpoints);
+
+  } else {
+      $self->status_not_found(
+	  $c,
+	  message => "Error, no endpoints found");
+  }
 }
+
+# The ActionClass thought it was a browser, so we'll let
+# the serializer use the root/documentation/index.tt
+# template to generate a human readable document.
 
 sub index_GET_html : Private {
   my ($self, $c) = @_;
 
-  print STDERR "Documentation::index_GET_html\n";
+  return;
+}
 
+sub info :Path('info') : Args(1) : ActionClass('REST::ForBrowsers') {
+  my ($self, $c, $endpoint) = @_;
 
 }
 
-sub info :Path('info') :Args(1) {
+sub info_GET : Private {
   my ($self, $c, $endpoint) = @_;
+
+  my $endpoint_cfg = $c->config()->{Endpoints}->{$endpoint};
+  if($endpoint_cfg) {
+    my $section =  $c->config()->{Endpoints}->{$endpoint}->{section};
+    $self->status_ok(
+	$c,
+	entity => $c->config()->{Documentation}->{$section}->{$endpoint});
+  } else {
+    $self->status_not_found(
+	$c,
+	message => "Endpoint '${endpoint}' Documentation Cannot Be Found");
+  }
+}
+
+sub info_GET_html : Private {
+  my ($self, $c, $endpoint) = @_;
+
   print STDERR "$endpoint\n";
   my $endpoint_cfg = $c->config()->{Endpoints}->{$endpoint};
   if($endpoint_cfg) {
       my $section =  $c->config()->{Endpoints}->{$endpoint}->{section};
       $c->stash()->{endpoint} = $c->config()->{Documentation}->{$section}->{$endpoint};
-#    $endpoint_cfg = $c->model('Documentation')->enrich($endpoint_cfg);
-#    $c->stash()->{endpoint} = $endpoint_cfg;
-#    $c->stash()->{template_title} = join(',',@{ $endpoint_cfg->{method} } ) . ' ' . $endpoint_cfg->{endpoint};
   }
   else {
     $c->response->status(404);
