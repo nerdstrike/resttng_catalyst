@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {},
+    "properties": {
+        "assembly_name": {
+            "id": "/properties/assembly_name",
+            "type": "string"
+        },
+        "biotype": {
+            "id": "/properties/biotype",
+            "type": "string"
+        },
+        "db_type": {
+            "id": "/properties/db_type",
+            "enum": ["core", "cdna", "funcgen", "otherfeatures", "rnaseq", "variation"]
+        },
+        "description": {
+            "id": "/properties/description",
+            "type": "string"
+        },
+        "display_name": {
+            "id": "/properties/display_name",
+            "type": "string"
+        },
+        "stable_id": {
+            "id": "/properties/stable_id",
+            "type": "string"
+        },
+        "stable_id_version": {
+            "id": "/properties/stable_id_version",
+            "type": "integer"
+        },
+	"location": {
+	    "type": "object",
+	    "$ref": "location.json"
+	},
+        "logic_name": {
+            "id": "/properties/logic_name",
+            "type": "string"
+        },
+        "object_type": {
+            "id": "/properties/object_type",
+            "type": "string"
+        },
+        "source": {
+            "id": "/properties/source",
+            "type": "string"
+        },
+        "species": {
+            "id": "/properties/species",
+            "type": "string"
+        }
+    },
+    "type": "object",
+    "required": ["assembly_name", "biotype", "db_type", "stable_id", "stable_id_version", "location", "object_type", "species"]
+}

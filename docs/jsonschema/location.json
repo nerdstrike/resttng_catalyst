@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {},
+    "id": "location",
+    "properties": {
+        "end": {
+            "id": "end",
+            "type": "integer",
+	    "minimum": 0
+        },
+        "name": {
+            "id": "name",
+            "type": "string"
+        },
+        "start": {
+            "id": "start",
+            "type": "integer",
+	    "minimum": 0
+        },
+        "strand": {
+            "id": "strand",
+            "type": "integer",
+	    "minimum": -1,
+	    "maximum": 1
+        },
+	"coord_system": {
+	    "enum": ["genomic", "cdna", "cds", "protein"]
+	}
+    },
+    "required": ["end", "name", "start", "strand", "coord_system"]
+}

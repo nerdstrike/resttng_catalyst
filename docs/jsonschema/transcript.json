@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {},
+    "id": "transcript",
+    "type": "object",
+    "properties": {
+	"Exon": {
+	    "id": "Exon",
+	    "type": "array",
+	    "items": {
+		"$ref": "exon.json"
+	    }
+	},
+	"Translation": {
+	    "id": "Translation",
+	    "type": "array",
+	    "items": {
+		"$ref": "translation.json"
+	    }
+	}
+    },
+    "allOf": [
+	{ "$ref": "feature.json" }
+    ]
+}
