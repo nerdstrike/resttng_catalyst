@@ -28,8 +28,6 @@ requires 'DBD::SQLite';
 requires 'Config::Any::Merge';
 
 # Transient dependencies from Ensembl
-requires 'Parse::RecDescent';
-requires 'XML::Writer';
 #requires 'Bio::DB::HTS';
 
 # ENSEMBL IS NOT EXPLICITLY REQUIRED; PLEASE INSTALL ALL ENSEMBL MODULES AS NORMAL
