@@ -1,23 +1,16 @@
 =head1 LICENSE
-
-Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute 
-Copyright [2016-2017] EMBL-European Bioinformatics Institute
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-=cut
-
-=pod
+  
+  See the NOTICE file distributed with this work for additional information
+  regarding copyright ownership.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
 =head1 NAME
 
@@ -33,7 +26,7 @@ The root controller for all controllers in the Ensembl REST server
 
 =head1 DESCRIPTION
 
-
+A base controller for REST controllers that can auto-load configuration and such from the PERL5LIB
 
 =cut
 
@@ -53,25 +46,19 @@ __PACKAGE__->config(
 # Default null initialization function if a controller doesn't implement one
 
 sub initialize_controller {
-    warn("No initialize_controller implemented for controller " . __PACKAGE__);
-
-    return;
+    ...
 }
 
 # Default null endpoint documentation function if a controller doesn't implement one
 
 sub endpoint_documentation {
-    warn("No documentation implemented for controller " . __PACKAGE__);
-
-    return;
+    ...
 }
 
 # Default null endpoints list function if a controller doesn't implement one
 
 sub endpoints {
-    warn("No endpoints() response implemented for controller " . __PACKAGE__);
-
-    return;
+    ...
 }
 
 # Attempt to load the configuration from a few well known locations.
@@ -104,7 +91,7 @@ sub _load_config {
 
     # Hunt through the stems in order looking for config files
     $self->{config} = Config::Any::Merge->load_stems({stems => \@stems, override => 0 });
-    
+
 }
 
 # Helper to fetch the base directory and flattened package name
